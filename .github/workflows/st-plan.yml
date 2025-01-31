@@ -24,11 +24,11 @@ jobs:
           sudo chmod +x /usr/local/bin/minikube
 
       # Paso 2: Instalar kubectl
-      - name: Install kubectl
-        run: |
-          curl -LO https://dl.k8s.io/release/v1.24.0/bin/linux/amd64/kubectl
-          sudo mv kubectl /usr/local/bin/
-          sudo chmod +x /usr/local/bin/kubectl
+      # - name: Install kubectl
+      #   run: |
+      #     curl -LO https://dl.k8s.io/release/v1.24.0/bin/linux/amd64/kubectl
+      #     sudo mv kubectl /usr/local/bin/
+      #     sudo chmod +x /usr/local/bin/kubectl
 
       # Paso 3: Iniciar Minikube con Docker como driver
       - name: Start Minikube cluster
