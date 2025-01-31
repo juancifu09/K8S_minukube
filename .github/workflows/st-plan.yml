@@ -1,0 +1,56 @@
+name: Create Minikube Cluster
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  create-cluster:
+    runs-on: self-hosted  # Utilizamos el runner local
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Paso 1: Instalar Minikube
+      - name: Install Minikube
+        run: |
+          curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+          sudo mv minikube-linux-amd64 /usr/local/bin/minikube
+          sudo chmod +x /usr/local/bin/minikube
+
+      # Paso 2: Instalar kubectl
+      - name: Install kubectl
+        run: |
+          curl -LO https://dl.k8s.io/release/v1.24.0/bin/linux/amd64/kubectl
+          sudo mv kubectl /usr/local/bin/
+          sudo chmod +x /usr/local/bin/kubectl
+
+      # Paso 3: Iniciar Minikube con Docker como driver
+      - name: Start Minikube cluster
+        run: |
+          minikube start --driver=docker
+
+      # Paso 4: Configurar kubectl para usar Minikube
+      - name: Set kubeconfig
+        run: |
+          kubectl config use-context minikube
+
+      # Paso 5: Verificar que el clúster de Minikube esté funcionando
+      - name: Verify Minikube cluster
+        run: |
+          kubectl get nodes
+          
+      # Paso 6: (Opcional) Desplegar una aplicación de ejemplo
+      - name: Deploy test app
+        run: |
+          kubectl apply -f ./k8s/deployment.yaml  # Si tienes un manifiesto de Kubernetes en el repositorio
+
+      # Paso 7: (Opcional) Verificar el estado de los Pods
+      - name: Check pod status
+        run: |
+          kubectl get pods
