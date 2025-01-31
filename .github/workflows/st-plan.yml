@@ -38,7 +38,7 @@ jobs:
       - name: Add user to docker group
         run: |
 
-            tree ~/.docker
+            
 
             docker run hello-world
             ls -l /var/run/docker.sock                           
