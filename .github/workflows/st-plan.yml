@@ -38,8 +38,7 @@ jobs:
       - name: Add user to docker group
         run: |
 
-            
-            sudo tree /var/lib/docker/
+            tree ~/.docker
             sudo chown "$USER":"$USER" /home/"$USER"/.docker -R
             sudo chmod g+rwx "$HOME/.docker" -R 
             docker run hello-world
