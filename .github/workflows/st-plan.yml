@@ -17,11 +17,11 @@ jobs:
         uses: actions/checkout@v3
 
       # Paso 1: Instalar Minikube
-      - name: Install Minikube
-        run: |
-          curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
-          sudo mv minikube-linux-amd64 /usr/local/bin/minikube
-          sudo chmod +x /usr/local/bin/minikube
+      # - name: Install Minikube
+      #   run: |
+      #     curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+      #     sudo mv minikube-linux-amd64 /usr/local/bin/minikube
+      #     sudo chmod +x /usr/local/bin/minikube
       - name: Install Docker
         run: |
           sudo apt-get update
