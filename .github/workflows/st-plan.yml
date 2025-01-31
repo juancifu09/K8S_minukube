@@ -39,8 +39,7 @@ jobs:
         run: |
 
             tree ~/.docker
-            sudo chown "$USER":"$USER" /home/"$USER"/.docker -R
-            sudo chmod g+rwx "$HOME/.docker" -R 
+
             docker run hello-world
             ls -l /var/run/docker.sock                           
 
