@@ -14,6 +14,14 @@ spec:
     spec:
       containers:
         - name: myapp
-          image: ubuntu:latest
+          image: ubuntu:18.04
           ports:
-            - containerPort: 8080
+            - containerPort: 8080          
+          command: ["/bin/bash", "-c", "while true; do echo 'Ejecutando Ubuntu...'; sleep 3600; done"]
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          securityContext:
+            privileged: false
+
