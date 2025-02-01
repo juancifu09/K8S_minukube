@@ -1,0 +1,62 @@
+# azure-pipelines.yml
+trigger:
+  branches:
+    include:
+      - main
+
+pr:
+  branches:
+    include:
+      - main
+
+jobs:
+- job: CreateMinikubeCluster
+  pool:
+    name: Local-Agent-Pool  # Reemplaza con el nombre de tu pool de agentes autohospedados si es necesario
+  steps:
+  - checkout: self
+
+  # Paso 1: Instalar Docker
+  - script: |
+      sudo apt-get update
+      sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common
+      curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+      sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+      sudo apt-get update
+      sudo apt-get install -y docker-ce  
+      sudo usermod -aG docker $(whoami)
+    displayName: 'Install Docker'
+
+  # Paso 2: Verificar instalación de Docker
+  - script: |
+      docker --version
+      docker run hello-world
+      ls -l /var/run/docker.sock
+    displayName: 'Verify Docker installation'
+
+  # Paso 3: Iniciar Minikube con Docker como driver
+  - script: |
+      minikube start --driver=docker
+    displayName: 'Start Minikube cluster'
+
+  # Paso 4: Configurar kubectl para usar Minikube
+  - script: |
+      kubectl config use-context minikube
+    displayName: 'Set kubeconfig'
+
+  # Paso 5: Verificar que el clúster de Minikube esté funcionando
+  - script: |
+      kubectl get nodes
+    displayName: 'Verify Minikube cluster'
+
+  # Paso 6: (Opcional) Desplegar una aplicación de ejemplo
+  - script: |
+      kubectl apply -f ./k8s/deployment.yaml
+    displayName: 'Deploy test app'
+    condition: succeeded()  # Solo ejecutar si los pasos anteriores tienen éxito
+
+  # Paso 7: (Opcional) Verificar el estado de los Pods
+  - script: |
+      kubectl get pods
+    displayName: 'Check pod status'
+    condition: succeeded()  # Solo ejecutar si los pasos anteriores tienen éxito
